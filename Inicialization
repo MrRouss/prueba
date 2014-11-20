@@ -1,41 +1,134 @@
+
+
 /* 
- * File:   main.c
- * Author: eps
- *
- * Created on 11 de noviembre de 2014, 12:41
+
  * GENEDADOR DE PARTIDAS
  * ::::::::::::::::::::::::::::::::::::::::::::INICIAR PARTIDA::::::::::::::::::::::::::::::::::::::::::::::::
-    EN PROCESO
+
  */
 
 #include <stdio.h>
 #include <stdlib.h>
-#define FILAS=8;
-#define COLUMNAS=8;
+#include <string.h>
+#define DIM=8;
 #define BLANCO='x';
 #define NEGRO='o';
 
+typedef struct{
+    char turno;
+    int ejex;
+    int ejey;
+}Ficha;
+typedef struct{
+    char casillas[][];
+}Tablero;
 
-char* crearTablero(); //Todavia lo estoy pensando, debo repasar punteros
-void crearTurno();
-void cambiarTurno(char * Turno);
+char crearTurno();
+void cambiarTurno(char turnoActual);
+Ficha crearFicha(char turno);
+
+
+char** crearTablero();//creamos tablero con las 4fichas
+void insertarFichaEnTablero(Ficha ficha, Tablero tablero);
+    int jugadasPosibles(char turnoActual, Tablero tablero);//booleano, se pueden hacer jugadas?
+    //si no se pueden hacer jugadas 
+    void pasarTurno();//Imprimimos la ficha que pasa turno y hacemos cambiarTurno()
+    void guardarFicha(Ficha ficha, Tablero tablero);
+    int buscarGanador(Tablero tablero);//booleano, tenemos ganador?
+        int finDePartida(Tablero tablero);//booleano, tablero lleno?
+        char contarFichas(Tablero tablero);//devolvemos el turno con +fichas
 void imprimirTablero(char * Tablero);
 void imprimirCabecera();
+void imprimirContador(Tablero tablero);
+int contarFichas(char turno, Tablero tablero);
 
-void crearTablero(){//No me creo que esto de, aun no lo he compilado
-    char tablero[][];
-    for(int i=0; i<FILAS+1; i++){
-        for(int j=0; j<COLUMNAS+1; j++){
-            tablero[i][j]=NULL;
-            printf("%d,%d:%s \n", i, j tablero[i][j]);
-        }}
-    
+
+char crearTurno(){
+    int i=-1;
+    char turno;
+    do{
+    if(i!=-1){
+        printf("\n \t >>>>>>Debe elegir una ficha permitita. \n");
+    }
+    printf("Elija la ficha con la que quiere juagar:\n\t 1. x \n\t 2. o\n" );
+    scanf("%d",i);
+    }while(i!=1 || i!=2);
+    if(i==1){
+        turno=""+BLANCO;
+    }
+    else{
+        turno=""+NEGRO;
+    }
+    return turno;
+}
+void crearTablero(){
+}
+void elegirTurno();
+void imprimirCabecera();
+void limpiarPizarra();
+void imprimirContador(Tablero tablero){
+    printf("x: %d \t\t\t\t o:%d", contarFichas("x", tablero), contarFichas("o", tablero));
+}
+int contarFichas(char turno, Tablero tablero){
+    int i,j, contador=0;
+    if(!tablero || !turno){//si no paso nada
+        return 2;
+    }
+    for (i; i<DIM+1  i++){
+        for(j; j<DIM+1 j++){
+            if(!tablero.casillas[i][j]){
+                continue;
+            }
+            if(strcmp(tablero.casillas[i][j], turno)){
+                contador++;
+            }
+        }
+    }
+    return contador;
+}
+void salir();
+void imprimirEstadisticas();
+void iniciarPartida();
+int imprimirMenu();
+
+int imprimirMenu(){
+    int i=-1;
+    do{
+        if(i!=-1){
+            printf("\n \t >>>>>>Debe elegir una opcion permitita. \n");
+        }
+        printf(">>MENU\n Elija la accion que desea realizar:\n\t"
+                " 1. Iniciar partida \n\t"
+                " 2. Ver Estadisticas\n\t"
+                " 3. Salir\n" );
+        scanf("%d",i);
+    }while(i!=1 || i!=2 || i!=3);
+    return i;
+}
+
+void imprimirCabecera(){
+    printf(">>>>>>>>>>>>>>Bienvenido a Reversi\n");
+    imprimirContador(NULL);
+    imprimirTablero(NULL);
+  
 }
 
 int main(int argc, char** argv) {
+    int opcion=0;
+    imprimirCabecera();
+    opcion=imprimirMenu();
+    switch(opcion){
+        case 1:
+            iniciarPartida();
+            break;
+        case 2:
+            imprimirEstadisticas();
+            break;
+        case 3:
+            salir();
+        default:    break;
+    }
     
-    
-    crearTablero();
     return (EXIT_SUCCESS);
 }
 
